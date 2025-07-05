@@ -1,0 +1,33 @@
+app = "omnicast-minio"
+primary_region = "gru"
+
+[build]
+  image = "minio/minio:latest"
+
+# Monte ambos os volumes (ou só um, se você criou só um)
+[[mounts]]
+  source      = "omnicast_minio_data_1"
+  destination = "/export1"
+
+[[mounts]]
+  source      = "omnicast_minio_data_2"
+  destination = "/export2"
+
+[env]
+  MINIO_ACCESS_KEY = "SEU_ACCESS_KEY"
+  MINIO_SECRET_KEY = "SEU_SECRET_KEY"
+  MINIO_BROWSER    = "on"
+
+[processes]
+  # dica: passe ambos os diretórios para o erasure-coding do MinIO
+  app = "minio server /export1 /export2 --console-address \":9001\""
+
+[[services]]
+  internal_port = 9000
+  protocol      = "tcp"
+  [[services.ports]]
+    port     = 9000
+    handlers = ["http"]
+  [[services.ports]]
+    port     = 9001
+    handlers = ["http"]
