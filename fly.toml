@@ -26,8 +26,30 @@ primary_region = "gru"
 [processes]
   app = "minio server /export1 --address 0.0.0.0:9000 --console-address 0.0.0.0:9001"
 
+# Serviço principal - API S3 na porta 9000
 [[services]]
   internal_port = 9000
+  protocol      = "tcp"
+  processes     = ["app"]
+  
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.ports]]
+    port     = 9000
+    handlers = ["http"]
+
+  [[services.tcp_checks]]
+    interval = "30s"
+    timeout  = "5s"
+    grace_period = "10s"
+    restart_limit = 3
+
+# Serviço do console web - exposto na porta 443 (HTTPS)
+[[services]]
+  internal_port = 9001
   protocol      = "tcp"
   processes     = ["app"]
   
@@ -44,26 +66,6 @@ primary_region = "gru"
   [[services.ports]]
     port     = 443
     handlers = ["tls", "http"]
-
-  [[services.tcp_checks]]
-    interval = "30s"
-    timeout  = "5s"
-    grace_period = "10s"
-    restart_limit = 3
-
-[[services]]
-  internal_port = 9001
-  protocol      = "tcp"
-  processes     = ["app"]
-  
-  [services.concurrency]
-    type = "connections"
-    hard_limit = 25
-    soft_limit = 20
-
-  [[services.ports]]
-    port     = 9001
-    handlers = ["http"]
 
   [[services.tcp_checks]]
     interval = "30s"
