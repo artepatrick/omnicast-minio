@@ -71,4 +71,15 @@ flyctl scale count 1
 
 # Ver informações dos volumes
 flyctl volumes list
-``` 
+```
+
+## Ferramentas de Desenvolvimento
+
+### MCP Sequential Thinking
+
+Este projeto está configurado com o **Sequential Thinking MCP Server** para facilitar a resolução de problemas complexos. Veja a documentação completa em [`.vscode/README.md`](.vscode/README.md).
+
+**Para usar:**
+1. Reinicie o VS Code para carregar a configuração MCP
+2. Use a ferramenta `sequential_thinking` em suas conversas com Claude
+3. Ideal para análise de configurações, troubleshooting e otimizações 
